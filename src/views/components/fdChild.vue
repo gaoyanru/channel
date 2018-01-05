@@ -1,5 +1,5 @@
 <template>
-<el-dialog title="代理商任务设置" :visible.sync="dialogTableVisible" size="small">
+<el-dialog title="代理商返点核算" :visible.sync="dialogTableVisible" size="small">
   <div class="fd-child">
     <el-form class="inline" label-width="50px">
       <el-form-item class="year-select" label="年份">
@@ -47,7 +47,7 @@ export default {
       dialogTableVisible: true,
       id: '',
       tasks: null,
-      year: 2017,
+      year: 2018,
       years: [2017, 2018],
       currYear: ''
     }
