@@ -125,11 +125,29 @@ export default {
       })
     },
     passOrder(row) {
-      this.$confirm('您确定要通过吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+      var code = row.ServiceCompanyCode
+      if (!code) {
+        this.$confirm('该订单没有经过国家工商网验证，将不能做账，请驳回', '提示', {
+          confirmButtonText: '确定通过',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          tobReviewPass(row.OrderId).then(res => {
+            if (res.status) {
+              this.$message({
+                type: 'success',
+                message: '通过!'
+              })
+              this.fetchData()
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
+      } else {
         tobReviewPass(row.OrderId).then(res => {
           if (res.status) {
             this.$message({
@@ -139,12 +157,7 @@ export default {
             this.fetchData()
           }
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消'
-        })
-      })
+      }
     },
     refuseOrder(row) {
       var item = {
