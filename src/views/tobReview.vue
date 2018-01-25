@@ -141,22 +141,23 @@ export default {
               this.fetchData()
             }
           })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          })
-        })
+        }).catch(() => {})
       } else {
-        tobReviewPass(row.OrderId).then(res => {
-          if (res.status) {
-            this.$message({
-              type: 'success',
-              message: '通过!'
-            })
-            this.fetchData()
-          }
-        })
+        this.$confirm('您确定要通过吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          tobReviewPass(row.OrderId).then(res => {
+            if (res.status) {
+              this.$message({
+                type: 'success',
+                message: '通过!'
+              })
+              this.fetchData()
+            }
+          })
+        }).catch(() => {})
       }
     },
     refuseOrder(row) {

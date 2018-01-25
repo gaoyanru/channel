@@ -140,15 +140,21 @@ export default {
           }).then((res) => {
             if (res.status) {
               if (!res.data) { // 账期连续
-                passO(row.OrderId).then(res => {
-                  if (res.status) {
-                    this.$message({
-                      type: 'success',
-                      message: '通过!'
-                    })
-                    this.fetchData()
-                  }
-                })
+                this.$confirm('您确定要通过吗?', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+                }).then(() => {
+                  passO(row.OrderId).then(res => {
+                    if (res.status) {
+                      this.$message({
+                        type: 'success',
+                        message: '通过!'
+                      })
+                      this.fetchData()
+                    }
+                  })
+                }).catch(() => {})
               } else if (res.data) {
                 var errorMsg = res.data
                 this.$confirm(errorMsg, '提示', {
@@ -170,15 +176,21 @@ export default {
             }
           })
         } else {
-          passO(row.OrderId).then(res => {
-            if (res.status) {
-              this.$message({
-                type: 'success',
-                message: '通过!'
-              })
-              this.fetchData()
-            }
-          })
+          this.$confirm('您确定要通过吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            passO(row.OrderId).then(res => {
+              if (res.status) {
+                this.$message({
+                  type: 'success',
+                  message: '通过!'
+                })
+                this.fetchData()
+              }
+            })
+          }).catch(() => {})
         }
       } else {
         this.$confirm('该订单没有经过国家工商网验证，将不能做账，请驳回', '提示', {
