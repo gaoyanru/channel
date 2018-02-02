@@ -29,7 +29,7 @@
                 <el-form-item label='公司名称：' required>
                   <span v-if="!modify">
                     {{postData.Customer.Name}}
-                    <span v-if="postData.Customer.IsSync" class="IsSync">工商检索</span>
+                    <span v-if="postData.Customer.ServiceCompanyCode" class="IsSync">工商检索</span>
                   </span>
                   <el-input v-if="modify" class='company-search' v-model='postData.Customer.Name'></el-input>
                   <el-button v-if="modify" type="primary" class="company-alert" @click="getCompanyInfo">同步官方</el-button>
