@@ -17,19 +17,19 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="审核状态">
-        <el-select class="inputWid" v-model="params.status " clearable placeholder="全部">
+        <el-select class="inputWid" v-model="params.status" clearable placeholder="全部">
           <el-option v-for="data in orderStatus" :key="data.status" :label="data.name" :value="data.status">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="订单类型">
-        <el-select class="inputWid" v-model="params.Category " clearable placeholder="全部">
+        <el-select class="inputWid" v-model="params.Category" clearable placeholder="全部">
           <el-option v-for="data in orderType" :key="data.Category" :label="data.name" :value="data.Category">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="代理商">
-        <el-select class="inputWid" filterable v-model="params.agents " clearable placeholder="请选择">
+        <el-select class="inputWid" filterable v-model="params.agents" clearable placeholder="请选择">
           <el-option v-for="data in agents" :key="data.ChannelId" :label="data.ChannelName" :value="data.ChannelId">
           </el-option>
         </el-select>

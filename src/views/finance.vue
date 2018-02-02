@@ -10,7 +10,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="选择类型">
-        <el-select v-model="params.type " clearable placeholder="请选择">
+        <el-select v-model="params.type" clearable placeholder="请选择">
           <el-option v-for="data in typeModel" :key="data.type" :label="data.name" :value="data.type">
           </el-option>
         </el-select>

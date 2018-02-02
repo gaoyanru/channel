@@ -26,7 +26,7 @@
         <el-input class="inputWid" v-model="params.orderid"></el-input>
       </el-form-item>
       <el-form-item label="已开发票">
-        <el-select class="selectWid" v-model="params.type " clearable placeholder="全部">
+        <el-select class="selectWid" v-model="params.type" clearable placeholder="全部">
           <el-option v-for="item in types" :key="item.type" :label="item.name" :value="item.type">
           </el-option>
         </el-select>
