@@ -223,6 +223,7 @@ export default {
       if (!this.agent.ProvinceCode) {
         this.cities = this.allCities
       } else {
+        this.agent.CityCode = ''
         this.cities = window._.filter(this.allCities, item => {
           return item.ProvinceCode.trim() === this.agent.ProvinceCode.trim()
         })
