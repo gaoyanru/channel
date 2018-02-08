@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       params: {
-        year: 2017,
+        year: 2018,
         months: '',
         partitions: [],
         provinces: [],

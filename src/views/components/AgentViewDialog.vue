@@ -42,7 +42,7 @@
     <el-form-item label="银行账户">
       <el-input v-model="agent.BankAccount" auto-complete="off" ></el-input>
     </el-form-item>
-    <el-form-item label="保证金" prop="Deposit">
+    <el-form-item v-if="IsCenter == 1" label="保证金" prop="Deposit">
       <el-input v-model="agent.Deposit" auto-complete="off" ></el-input>
     </el-form-item>
     <el-form-item label="用户名" prop="UserName" v-if="isCenter && !ismodify">

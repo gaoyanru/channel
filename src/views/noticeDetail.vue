@@ -97,7 +97,7 @@ export default {
       div
         height: 30px
         line-height: 30px
-        padding: 0 120px
+        padding: 0 50px
         .end-date
           float: right
         span

@@ -1,7 +1,7 @@
 <template>
 <div>
-  <el-dialog title="修改密码" :visible.sync="dialogFormVisible">
-    <el-form :model="ruleForm" :rules="rules" class="demo-ruleForm" ref="ruleForm" label-width="100px">
+  <el-dialog title="修改密码" :visible.sync="dialogFormVisible" size="mini">
+    <el-form :model="ruleForm" :rules="rules" class="demo-ruleForm" ref="ruleForm" label-width="80px">
       <el-form-item label="旧密码" prop="Old">
         <el-input v-model="ruleForm.Old" auto-complete="off"></el-input>
       </el-form-item>

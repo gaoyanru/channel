@@ -1,5 +1,5 @@
 <template>
-<div class="partition">
+<div style="padding: 15px" class="partition">
   <h3 class="vheader">大区管理</h3>
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params">
@@ -17,7 +17,7 @@
     <el-table-column prop="PartitionName" width="150" label="大区"></el-table-column>
     <el-table-column prop="Provinces" label="管辖省份"></el-table-column>
     <el-table-column label="操作" align="center" width="200">
-      <template scope="scope">
+      <template slot-scope="scope">
         <el-button @click="scan(scope.row)" type="text" size="small">查看</el-button>
         <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
         <el-button @click="deleteItem(scope.row)" type="text" size="small">删除</el-button>

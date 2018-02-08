@@ -11,7 +11,7 @@
       <el-table-column property="Description" label="备注" min-width="300"></el-table-column>
       <el-table-column property="BillTime" label="操作时间" width="200"></el-table-column>
       <el-table-column v-if="type == 1" label="操作">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button @click="scanView(scope.row)" type="text" size="small" v-if="scope.row.Category != 3 && scope.row.Category != 6">查看</el-button>
         </template>
       </el-table-column>

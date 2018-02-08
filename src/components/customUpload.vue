@@ -3,6 +3,7 @@
     <input type="file" style="display: none">
     <div class="upload-area">
       <span style="display: none">重新上传</span>
+      <img v-if="!!value" :src="value" alt="">
     </div>
     <p class="ng-binding">
       <span class="required"></span>
@@ -19,9 +20,13 @@
       title: String,
       uploaded: Function
     },
+    updated () {
+      if (this.value && !this.viewer) {
+        this.appendImg(this.value)
+      }
+    },
     mounted () {
       var _self = this
-
       var ele = $(this.$el)
       ele.find('.upload-area').hover(function (e) {
         if (ele.attr('disabled')) return
@@ -70,27 +75,29 @@
         _self.$ossUploader(file).then(function (res) {
           if (res.status === 200) {
             ele.find('.upload-area .upload-shadow, .upload-area i').remove()
-            _self.appendImg(res.sourceUrl)
             _self.$emit('input', res.sourceUrl)
             _self.uploaded && _self.uploaded()
+            _self.$nextTick(() => {
+              _self.appendImg(res.sourceUrl)
+            })
           } else {
             alert('上传失败')
           }
+        }, () => {
+          alert('上传失败')
         })
       })
     },
     methods: {
       appendImg (src) {
-        var _self = this
-        var ele = $(this.$el)
-        ele.find('.upload-area img')[0] ? ele.find('.upload-area img').prop('src', src) : ele.find('.upload-area').append('<img src="' + src + '"  />')
+        console.log(src, 'appendImg')
         this.viewer = new Viewer(this.$el.querySelector('img'), {
           navbar: false,
           title: false,
           zIndex: 9999,
-          view: function () {
-            document.onclick = function (e) {
-              if (e.target.className === 'viewer-canvas') _self.viewer.hide()
+          view: () => {
+            document.onclick = (e) => {
+              if (e.target.className === 'viewer-canvas') this.viewer.hide()
             }
           }
         })

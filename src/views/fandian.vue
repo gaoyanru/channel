@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style="padding: 15px">
   <h3 class="vheader">渠道返点</h3>
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params">
@@ -25,7 +25,7 @@
     <el-table-column prop="Address" label="地址" min-width="200">
     </el-table-column>
     <el-table-column label="联系方式" width="130">
-      <template scope="scope">
+      <template slot-scope="scope">
         <span v-text="scope.row.Tel"></span><br>
         <span v-text="scope.row.Mobile"></span>
       </template>
@@ -33,7 +33,7 @@
     <el-table-column prop="Status" :formatter="StatusFormat" label="状态">
     </el-table-column>
     <el-table-column label="操作" width="150">
-      <template scope="scope">
+      <template slot-scope="scope">
         <el-button @click="setTask(scope.row)" type="text" size="small">设置任务</el-button>
         <el-button @click="fd(scope.row)" type="text" size="small">返点</el-button>
       </template>

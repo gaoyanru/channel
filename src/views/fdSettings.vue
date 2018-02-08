@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style="padding: 15px">
   <h3 class="vheader">返点设置</h3>
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params" label-width="120px">
@@ -25,7 +25,7 @@
     <el-table-column prop="RebatesRatio" :formatter="data3Format" label="返点">
     </el-table-column>
     <el-table-column label="操作">
-      <template scope="scope">
+      <template slot-scope="scope">
         <el-button @click="deleteItem(scope.row)" type="text" size="small">删除</el-button>
       </template>
     </el-table-column>

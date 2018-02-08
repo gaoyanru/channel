@@ -1,5 +1,5 @@
 <template>
-  <div class="file-list">
+  <div style="padding: 15px" class="file-list">
     <h3 class="vheader">
       {{title}}
       <span class="back-last" @click="goBackHome"><<返回首页</span>
@@ -10,7 +10,7 @@
           <el-input placeholder="搜索文件名" v-model="params.filename"></el-input>
         </el-form-item>
         <el-form-item label="">
-          <el-select v-model="params.type " clearable>
+          <el-select v-model="params.type" clearable>
             <el-option v-for="data in types" :key="data.type" :label="data.name" :value="data.type">
             </el-option>
           </el-select>
@@ -23,10 +23,10 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="FileName" label="文件名" min-width="180"></el-table-column>
-      <el-table-column v-if="category === 1" prop="" label="可见范围" min-width="180">
-        <template scope="scope">
+    <el-table :data="tableData" border style="width: 100%">
+      <el-table-column prop="FileName" label="文件名" min-width="200"></el-table-column>
+      <el-table-column v-if="category === 1" prop="" label="可见范围">
+        <template slot-scope="scope">
           <div v-if="scope.row.ChannelRoleNames && scope.row.CenterRoleNames" :title="scope.row.CenterRoleNames + '；' +scope.row.ChannelRoleNames">
             <span>{{scope.row.CenterRoleNames}}</span>
             <span>；</span>
@@ -43,7 +43,7 @@
       <el-table-column prop="FileSize" label="大小" min-width="80"></el-table-column>
       <el-table-column prop="CreateDate" label="上传日期" min-width="120"></el-table-column>
       <el-table-column v-if="category === 1" label="操作" width="250">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button @click="download(scope.row)" type="text" size="small">下载</el-button>
           <el-button v-if="!scope.row.IsOften" @click="setOften(scope.row)" type="text" size="small">设为常用</el-button>
           <el-button v-if="scope.row.IsOften" @click="setOften(scope.row)" type="text" size="small">取消常用</el-button>
@@ -52,7 +52,7 @@
         </template>
       </el-table-column>
       <el-table-column v-if="category === 0" label="操作" min-width="100">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button @click="download(scope.row)" type="text" size="small">下载</el-button>
         </template>
       </el-table-column>
@@ -111,7 +111,7 @@ export default {
   },
   methods: {
     goBackHome() {
-      this.$router.push({name: 'Main'})
+      this.$router.push({name: 'main.home'})
     },
     fetchData() {
       let limit = this.pagination.pageSize
@@ -200,12 +200,8 @@ export default {
 
 <style lang="stylus">
 .file-list
-  .vheader
-    border-bottom: none;
-    margin: 10px 0;
-    padding: 6px 20px;
-  .vsearch
-    padding-left: 20px
+  table
+    width: 100% !important
   .back-last
     font-size: 12px
     font-weight: normal

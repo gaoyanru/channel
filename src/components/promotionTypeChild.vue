@@ -17,7 +17,7 @@
     <el-table-column prop="StartDate" label="开始日期" :formatter="StatusStartDate"></el-table-column>
     <el-table-column prop="EndDate" label="结束日期" :formatter="StatusDate"></el-table-column>
     <el-table-column label="操作" >
-      <template scope="scope">
+      <template slot-scope="scope">
         <el-button @click="updateItem(scope.row)" type="text" size="small">修改</el-button>
         <el-button @click="deleteItem(scope.row)" type="text" size="small">删除</el-button>
       </template>

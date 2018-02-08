@@ -144,6 +144,9 @@ export const pass = (channelId, data) => {
 export const getCities = params => {
   return axios.get(`${base}/code/city`).then(res => res.data)
 }
+export const getcurCities = params => {
+  return axios.get(`${base}/code/city?pcode=${params}`).then(res => res.data)
+}
 // --获取渠道详细信息
 export const getAgent = params => {
   return axios.get(`${base}/agent/${params}`).then(res => res.data)
@@ -472,6 +475,12 @@ export const financeDetail = params => {
     params: params
   }).then(res => res.data)
 }
+// 代理商财务列表
+export const financeDetailList = params => {
+  return axios.get(`${base}/finance/agent/detaillist`, {
+    params: params
+  }).then(res => res.data)
+}
 // 财务管理--充值
 export const finance = params => {
   return axios.post(`${base}/finance/AddFinancePrepaidRecord`, params).then(res => res.data)
@@ -670,7 +679,7 @@ export const channelAgents = params => {
   }).then(res => res.data)
 }
 // 价格列表 {cityCode}
-export const getPrices = (params) => {
+export const Prices = (params) => {
   return axios.get(`${base}/cityprice`, {
     params: params
   }).then(res => res.data)
@@ -941,4 +950,143 @@ export const downloadfile = (id) => {
 // 获取账户余额
 export const balance = (channelid) => {
   return axios.get(`${base}/finance/balance?channelid=${channelid}`).then(res => res.data)
+}
+// 代理商-发票申请列表查询
+export const invoiceapply = params => {
+  return axios.get(`${base}/invoice`, {
+    params: params
+  }).then(res => res.data)
+}
+// 代理商-发票未开金额
+export const invoiceLastmonth = () => {
+  return axios.get(`${base}/invoice/invoiceLastmonth`).then(res => res.data)
+}
+// 代理商-发票开具查询列表
+export const invoiceIssue = params => {
+  return axios.get(`${base}/invoice/issue`, {
+    params: params
+  }).then(res => res.data)
+}
+// 代理商发票地址列表
+export const address = () => {
+  return axios.get(`${base}/address`).then(res => res.data)
+}
+// 代理商添加地址
+export const addAddress = (params) => {
+  return axios.post(`${base}/address`, params).then(res => res.data)
+}
+export const updataAddress = (id, params) => {
+  return axios.put(`${base}/address/${id}`, params).then(res => res.data)
+}
+// 代理商可开订单列表
+export const getneworders = params => {
+  return axios.get(`${base}/invoice/getneworders`, {
+    params: params
+  }).then(res => res.data)
+}
+// 代理商申请开票
+export const addinvoice = (params) => {
+  return axios.post(`${base}/invoice/addinvoice`, params).then(res => res.data)
+}
+// 代理商修改发票信息
+export const putinvoice = (params) => {
+  return axios.put(`${base}/invoice/putinvoice`, params).then(res => res.data)
+}
+// 代理商删除发票信息
+export const deleteinvoice = (id) => {
+  return axios.put(`${base}/invoice/deleteinvoice/${id}`).then(res => res.data)
+}
+// 代理商获取当前代理商账户余额
+export const balancecur = () => {
+  return axios.get(`${base}/agent/balance`).then(res => res.data)
+}
+// 代理商删除充值申请
+export const deleteRecharge = (id) => {
+  return axios.put(`${base}/finance/deleteprepai/${id}`).then(res => res.data)
+}
+// 代理商充值申请
+export const addprepai = (params) => {
+  return axios.post(`${base}/finance/addprepai`, params).then(res => res.data)
+}
+// 代理商充值申请修改
+export const putprepai = (params) => {
+  return axios.put(`${base}/finance/putprepai`, params).then(res => res.data)
+}
+// 代理商修改发票申请
+export const getprepaiId = (id) => {
+  return axios.get(`${base}/finance/getprepai?id=${id}`).then(res => res.data)
+}
+// 代理商我的订单列表
+export const ordersMy = params => {
+  return axios.get(`${base}/orders/my`, {
+    params: params
+  }).then(res => res.data)
+}
+// 代理商纳税人类别变更
+export const signacontractMy = params => {
+  return axios.get(`${base}/signacontract/my`, {
+    params: params
+  }).then(res => res.data)
+}
+// 代理商提单选择销售
+export const orderssales = () => {
+  return axios.get(`${base}/orders/sales`).then(res => res.data)
+}
+// 代理商参加的活动
+export const getchannelpromotionbyorder = () => {
+  return axios.get(`${base}/newpromotion/getchannelpromotionbyorder`).then(res => res.data)
+}
+// 代理商本地数据库检索公司
+export const companyname = (val) => {
+  return axios.get(`${base}/orders/companyname?name=${val}`).then(res => res.data)
+}
+// 代理商本地选择公司加载公司详细信息
+export const company = (val) => {
+  return axios.get(`${base}/orders/company?name=${val}`).then(res => res.data)
+}
+// 检索公司信息
+export const getcustomerlistbyty = (val) => {
+  return axios.get(`${base}/order/getcustomerlistbyty?size=7&word=${val}`).then(res => res.data)
+}
+// 检索具体公司信息
+export const getcustomerbyty = (id) => {
+  return axios.get(`${base}/order/getcustomerbyty?code=${id}`).then(res => res.data)
+}
+// 代理商新增订单
+export const addOrders = (params) => {
+  return axios.post(`${base}/orders`, params).then(res => res.data)
+}
+// 代理商修改订单
+export const putOrders = (id, params) => {
+  return axios.put(`${base}/orders/${id}`, params).then(res => res.data)
+}
+// 代理商Reorders
+export const putReorders = (id, params) => {
+  return axios.put(`${base}/Reorders/${id}`, params).then(res => res.data)
+}
+// 检测是否存在预提单
+export const checkStatusByPersonalCard = (id) => {
+  return axios.get(`${base}/order/CheckStatusByPersonalCard?personancard=${id}`).then(res => res.data)
+}
+// 代理商预提单
+export const orderszj = (params) => {
+  return axios.post(`${base}/orderszj`, params).then(res => res.data)
+}
+// 代理商修改预提单
+export const putOrderszj = (id, params) => {
+  return axios.put(`${base}/Reorders/${id}`, params).then(res => res.data)
+}
+// 代理商记账准备
+export const supplementaryinfo = (params) => {
+  return axios.put(`${base}/supplementaryinfo`, params).then(res => res.data)
+}
+// 代理商账户余额
+export const alert = () => {
+  return axios.get(`${base}/agent/alert`).then(res => res.data)
+}
+// 中心渠道经理业绩
+export const getchannelmanagereports = params => {
+  return axios.get(`${base}/report/getchannelmanagereports`, {
+    params: params
+  }).then(res => res.data)
 }

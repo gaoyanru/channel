@@ -31,7 +31,7 @@ export default {
     // funlist = funlist.sort(sortFn)
     // console.log(funlist, '菜单')
     funlist = window._.sortBy(funlist, 'Rank')
-    // console.log(funlist, '排序后')
+    // console.log(fun`list, '排序后')
     funlist.forEach(function(item) {
       item.children = item.children.sort(sortFn)
     })

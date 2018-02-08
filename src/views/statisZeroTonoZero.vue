@@ -1,5 +1,5 @@
 <template>
-  <div class="statis-ytOdersTozsOders">
+  <div style="padding: 15px" class="statis-ytOdersTozsOders">
     <h3 class="vheader">零申报转非零申报统计</h3>
     <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
     <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum:[1,2,3]="downloadSum" @cell-click="downloadColumn">
@@ -13,7 +13,7 @@
       </el-table-column>
       <el-table-column prop="ChannelName2" label="二级代理商" min-width="200">
       </el-table-column>
-      <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus" min-width="150">
+      <el-table-column prop="Status" label="代理商状态" :formatter="handleStatus" min-width="150">
       </el-table-column>
       <el-table-column prop="zeronum" label="零申报数量" width="150">
       </el-table-column>
@@ -45,6 +45,8 @@ export default {
     }
   },
   created() {
+    var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.IsCenter = userInfos.IsCenter
     this.fetchData()
     var start = this.getNowMonthStartDate()
     var end = this.getNowMonthLastDate()
@@ -182,9 +184,9 @@ export default {
       // console.log(row)
       var status = +row.Status
       if (status === 0) {
-        status = '是'
+        status = '解约'
       } else if (status > 0) {
-        status = '否'
+        status = '正常'
       }
       return status
     }

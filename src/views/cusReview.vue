@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style="padding: 15px">
   <h3 class="vheader">注册审核</h3>
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params" label-width="80px">
@@ -32,13 +32,13 @@
     <el-table-column prop="ChannelName2" label="二级代理商" width="200">
     </el-table-column>
     <el-table-column label="订单编号/合同号" width="210">
-      <template scope="scope">
+      <template slot-scope="scope">
           <span v-text="scope.row.OrderId"></span><br>
           <span v-text="scope.row.ContractNO"></span>
         </template>
     </el-table-column>
     <el-table-column label="联系人/电话" width="130">
-      <template scope="scope">
+      <template slot-scope="scope">
           <span v-text="scope.row.Contacts"></span><br>
           <span v-text="scope.row.Mobile"></span>
         </template>
@@ -48,7 +48,7 @@
     <el-table-column prop="CreateDate" label="订单日期" width="120">
     </el-table-column>
     <el-table-column label="礼包">
-      <template scope="scope">
+      <template slot-scope="scope">
         <span v-text="scope.row.GiftTypeName"></span>
         <span>{{scope.row.GiftPrice | formatePrice}}</span>
       </template>
@@ -56,7 +56,7 @@
     <el-table-column prop="PromotionName" label="活动">
     </el-table-column>
     <el-table-column label="操作" width="150">
-      <template scope="scope">
+      <template slot-scope="scope">
           <el-button @click="viewOrder(scope.row)" type="text" size="small">查看</el-button>
           <el-button @click="passOrder(scope.row)" type="text" size="small">通过</el-button>
           <el-button @click="refuseOrder(scope.row)" type="text" size="small">驳回</el-button>

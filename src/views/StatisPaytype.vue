@@ -21,7 +21,7 @@
 <script>
 import SearchParams from '@/components/searchParams.vue'
 import {
-  getPrices,
+  Prices,
   getAgentsOrderType
 } from '../api/api'
 import ExcelDown from '../service/excelDown'
@@ -42,9 +42,10 @@ export default {
     }
   },
   created() {
-    getPrices({
+    var obj = {
       cityCode: ''
-    }).then(res => {
+    }
+    Prices(obj).then(res => {
       let _ = window._
       this.priceNames = _.keys(_.groupBy(res.data, 'PriceName'))
       this.fetchData()

@@ -1,5 +1,5 @@
 <template>
-<div class="charge-type">
+<div style="padding: 15px" class="charge-type">
   <h3 class="vheader">充值类型设置</h3>
   <div class="charge-con">
     <div class="con-item" v-for="record in records">

@@ -24,7 +24,7 @@ import FdSettings from '@/views/fdSettings' // 返点设置
 import StatisCustotaltoc from '@/views/StatisCustotaltoc'  // 客户统计
 import StatisChannel from '@/views/StatisChannel'  // 渠道统计
 import UserList from '@/views/userList' // 员工管理
-// import UserFq from '@/views/usersFq' // 分区设置
+
 import PartitionManage from '@/views/partitionManage' // 大区管理
 import OperateAccount from '@/views/operateAccount' // 做账数据管理--运营会计数据总览
 import WaitSetAccount from '@/views/waitSetAccount' // 做账数据管理--待建账数据统计
@@ -47,6 +47,14 @@ import InfoList from '@/views/infolist' // 公告管理列表
 import NoticeDetail from '@/views/noticeDetail' // 公告详情页
 import Filelist from '@/views/filelist' // 文档列表
 
+// 代理商组件列表
+import InvoiceApply from '@/views/channel/InvoiceApply' // 代理商发票申请
+import InvoiceAddress from '@/views/channel/invoiceAddress' // 代理商发票地址
+import RechargeApply from '@/views/channel/rechargeApply' // 代理商充值申请
+import OrderList from '@/views/channel/orderList' // 代理商我的订单
+import Conchange from '@/views/channel/conchange' // 代理商企业性质变更
+import AddOrder from '@/views/channel/channelAddorder' // 代理商新增订单
+import ChannelmanageAchieve from '@/views/channelmanageAchieve' // 中心业绩
 Vue.use(Router)
 const router = new Router({
   routes: [{
@@ -63,7 +71,7 @@ const router = new Router({
       component: AgentList
     }, {
       name: 'main.agentAuth',
-      path: 'AgentAuth',
+      path: 'agentAuth',
       component: AgentAuth
     }, {
       name: 'main.review',
@@ -82,6 +90,26 @@ const router = new Router({
       path: 'orderSearch',
       component: OrderSearch
     }, {
+      name: 'main.orderList',
+      path: 'orderList',
+      component: OrderList
+    }, {
+      name: 'main.conchange',
+      path: 'conchange',
+      component: Conchange
+    }, {
+      name: 'main.addOrder',
+      path: 'addOrder',
+      component: AddOrder
+    }, {
+      name: 'main.editOrder',
+      path: 'editOrder/:orderId/:view', // 1修改订单2查看3查看原订单不能做任何修改
+      component: $.extend(true, {}, AddOrder)
+    }, {
+      name: 'main.xfOrder',
+      path: 'xfOrder/:Name/:ServiceEnd',
+      component: $.extend(true, {}, AddOrder)
+    }, {
       name: 'main.invoiceReview',
       path: 'invoiceReview',
       component: InvoiceReview
@@ -89,6 +117,14 @@ const router = new Router({
       name: 'main.invoiceSearch',
       path: 'invoiceSearch',
       component: InvoiceSearch
+    }, {
+      name: 'main.invoice',
+      path: 'invoice',
+      component: InvoiceApply
+    }, {
+      name: 'main.address',
+      path: 'address',
+      component: InvoiceAddress
     }, {
       name: 'main.chargebackRecord',
       path: 'chargebackRecord',
@@ -105,6 +141,10 @@ const router = new Router({
       name: 'main.recharge_review',
       path: 'recharge_review',
       component: RechargeCheck
+    }, {
+      name: 'main.recharge_apply',
+      path: 'recharge_apply',
+      component: RechargeApply
     }, {
       name: 'main.finance_statis',
       path: 'finance_statis',
@@ -140,7 +180,6 @@ const router = new Router({
     }, {
       name: 'main.users_fq',
       path: 'users_fq',
-      // component: UserFq
       component: PartitionManage
     }, {
       name: 'main.setPromotionType',
@@ -155,6 +194,10 @@ const router = new Router({
       name: 'main.custotaltoc',
       path: 'custotaltoc',
       component: StatisCustotaltoc
+    }, {
+      name: 'main.channelmanage_achieve',
+      path: 'channelmanage_achieve',
+      component: ChannelmanageAchieve
     }, {
       name: 'main.statis_channel',
       path: 'statis_channel',

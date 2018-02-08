@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style="padding: 15px">
   <h3 class="vheader">财务统计</h3>
   <el-tabs type="card" :value="activeName">
     <el-tab-pane label="充值明细表" name="tab1">

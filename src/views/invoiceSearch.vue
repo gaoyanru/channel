@@ -1,5 +1,5 @@
 <template>
-<div class="invoice-search">
+<div style="padding: 15px" class="invoice-search">
   <h3 class="vheader">发票查询</h3>
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params">
@@ -62,7 +62,7 @@
     <el-table-column prop="AuditDate" label="审核时间" :formatter="StatusDate" align="center" width="120">
     </el-table-column>
     <el-table-column label="操作" align="center">
-      <template scope="scope">
+      <template slot-scope="scope">
           <el-button @click="scan(scope.row)" type="text" size="small">查看</el-button>
         </template>
     </el-table-column>

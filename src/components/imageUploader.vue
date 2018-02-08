@@ -1,6 +1,6 @@
 <template>
 <div class="image-uploader">
-  <div :class="isClose ? 'img-item': '' " ref="imgItem">
+  <div v-if="typeof value === 'string'" :class="isClose ? 'img-item': '' " ref="imgItem">
     <img :src="value" v-show="value">
     <i class="el-icon-circle-cross" style="display: none;" @click="deleteImg"></i>
   </div>
@@ -25,25 +25,13 @@ export default {
     }
   },
   mounted() {
-    let that = this
-    // console.log(this.$el)
-    this.viewer = new Viewer(this.$el.querySelector('img'), {
-      navbar: false,
-      title: false,
-      zIndex: 9999,
-      view: function () {
-        document.onclick = function (e) {
-          if (e.target.className === 'viewer-canvas') that.viewer.hide()
-        }
-      }
-    })
-
-    if (this.isClose) {
-      $(this.$refs['imgItem']).hover(() => {
-        $(that.$refs['imgItem']).children('.el-icon-circle-cross').show()
-      }, () => {
-        $(that.$refs['imgItem']).children('.el-icon-circle-cross').hide()
-      })
+    if (typeof this.value === 'string') {
+      this.initDom()
+    }
+  },
+  updated() {
+    if (typeof this.value === 'string') {
+      this.initDom()
     }
   },
   created() {
@@ -51,6 +39,26 @@ export default {
     this.handleAction()
   },
   methods: {
+    initDom() {
+      let that = this
+      this.viewer = new Viewer(this.$el.querySelector('img'), {
+        navbar: false,
+        title: false,
+        zIndex: 9999,
+        view: function () {
+          document.onclick = function (e) {
+            if (e.target.className === 'viewer-canvas') that.viewer.hide()
+          }
+        }
+      })
+      if (this.isClose) {
+        $(this.$refs['imgItem']).hover(() => {
+          $(that.$refs['imgItem']).children('.el-icon-circle-cross').show()
+        }, () => {
+          $(that.$refs['imgItem']).children('.el-icon-circle-cross').hide()
+        })
+      }
+    },
     random_string(len) {
       len = len || 32
       var chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'

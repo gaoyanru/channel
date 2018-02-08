@@ -1,8 +1,8 @@
 <template>
-<div class="baobiao1">
+<div style="padding: 15px" class="baobiao1">
   <h3 class="vheader">运营会计数据总览</h3>
   <SearchParams :length="tableData.length"  @search="onSearch" @download="onDownload" :make-account="true"></SearchParams>
-  <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
+  <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum:[1,3,6,7,8]="downloadSum">
     <el-table-column prop="PartitionName" label="大区" width="120">
     </el-table-column>
     <el-table-column prop="ProvinceName" label="省" width="120">
@@ -53,10 +53,14 @@ export default {
         channelname: ''
       },
       cities: '',
-      tableHeight: 300
+      tableHeight: 300,
+      channelids: '',
+      accountids: ''
     }
   },
   created() {
+    var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.IsCenter = userInfos.IsCenter
     this.fetchData()
   },
   mounted() {
@@ -74,6 +78,15 @@ export default {
     fetchData() {
       agenttotalcustomer(this.params).then((res) => {
         this.tableData = res.data
+        var channel = []
+        var accountid = []
+        for (var i in this.tableData) {
+          channel.push(this.tableData[i].ChannelId)
+          accountid.push(this.tableData[i].AccountId)
+        }
+        this.channelids = channel.join(',')
+        this.accountids = accountid.join(',')
+        console.log(channel, 'channel')
       })
     },
     onSearch(params) {
@@ -85,6 +98,40 @@ export default {
     },
     onDownload() {
       ExcelDown().tableToExcel('dataTable', '运营会计数据')
+    },
+    downloadSum(index) {
+      console.log('合计下载')
+      var {
+        enddate
+      } = this.params
+      if (!enddate) {
+        var date = new Date()
+        enddate = date
+      }
+      var url = ''
+      var agent = 'https://agent.pilipa.cn/api/v1/AgentExport.ashx' // 正式
+      // var agent = 'https://ri.i-counting.cn/api/v1/AgentExport.ashx'
+      // var agent = 'http://123.56.31.133:33/api/v1/AgentExport.ashx'
+      if (index === 1) {
+        if (this.channelids.length > 2000) {
+          this.$message({
+            message: '请缩小查询范围',
+            type: 'warning'
+          })
+          return
+        }
+        url = `/api/download/exportagentcustomers?channelids=${this.channelids}`
+      } else if (index === 3) {
+        url = agent + `?type=tidanzero&accountid=${this.accountids}&enddate=${enddate || ''}`
+      } else if (index === 6) {
+        url = agent + `?type=historybusinessdate&accountid=${this.accountids}&enddate=${enddate || ''}`
+      } else if (index === 7) {
+        url = agent + `?type=getunstartnum&accountid=${this.accountids}&enddate=${enddate || ''}`
+      } else if (index === 8) {
+        url = agent + `?type=totalhung&accountid=${this.accountids}&enddate=${enddate || ''}`
+      }
+      window.open(url)
+      // alert(index)
     },
     getSummaries(param) {
       const {
@@ -118,7 +165,9 @@ export default {
       // console.log(arguments, 'arguments')
       // 不同列下载东西不一样
       // console.log(cell.cellIndex)
+      console.log(row, 'row')
       var AccountId = row.AccountId
+      var channelids = row.ChannelId
       // console.log(AccountId)
       var enddate = this.params.enddate
       if (!enddate) {
@@ -126,13 +175,27 @@ export default {
         enddate = date
       }
       // console.log(enddate)
-      var agent = 'https://agent.pilipa.cn/api/v1/AgentExport.ashx'
+      var agent = 'https://agent.pilipa.cn/api/v1/AgentExport.ashx' // 线上
       // var agent = 'https://ri.i-counting.cn/api/v1/AgentExport.ashx'
+      // var agent = 'http://123.56.31.133:33/api/v1/AgentExport.ashx'
       var url = ''
-      if (cell.cellIndex === 7) {
+      if (cell.cellIndex === 6) {
+        // 新需求 测试 https://x-qd.i-counting.cn 正式 https://qd.i-counting.cn
+        url = `/api/download/exportagentcustomers?channelids=${channelids}`
+        // url = agent + `?type=totalcustomer&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 7) {
         url = agent + `?type=totalcustomer&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 8) {
+        // 新需求
+        url = agent + `?type=tidanzero&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 10) {
+        // 新需求
+        url = agent + `?type=ReceiptDetail&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 11) {
         url = agent + `?type=historybusinessdate&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 12) {
+        // 新需求
+        url = agent + `?type=getunstartnum&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 13) {
         url = agent + `?type=totalhung&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else {
@@ -148,17 +211,14 @@ export default {
 }
 </script>
 <style>
-.baobiao1 .el-table__body tr td:nth-child(8) .cell{
-  cursor: pointer;
-  color: #20a0ff;
-  text-decoration: underline;
-}
-.baobiao1 .el-table__body tr td:nth-child(12) .cell{
-  cursor: pointer;
-  color: #20a0ff;
-  text-decoration: underline;
-}
-.baobiao1 .el-table__body tr td:nth-child(14) .cell{
+.baobiao1 .el-table__body tr td:nth-child(7) .cell,
+.baobiao1 .el-table__body tr td:nth-child(8) .cell,
+.baobiao1 .el-table__body tr td:nth-child(9) .cell,
+.baobiao1 .el-table__body tr td:nth-child(11) .cell,
+.baobiao1 .el-table__body tr td:nth-child(12) .cell,
+.baobiao1 .el-table__body tr td:nth-child(13) .cell,
+.baobiao1 .el-table__body tr td:nth-child(14) .cell
+{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;

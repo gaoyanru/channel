@@ -1,10 +1,10 @@
 <template>
-<div class="order-search">
+<div style="padding: 15px" class="order-search">
   <h3 class="vheader">订单查询</h3>
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params">
       <el-form-item label="公司名称">
-        <el-input class="inputWid" placeholder="公司名称" v-model="params.cusname"></el-input>
+        <el-input class="inputWid1" placeholder="公司名称" v-model="params.cusname"></el-input>
       </el-form-item>
       <el-form-item label="法人">
         <el-input class="inputWid" placeholder="法人" v-model="params.legalPerson"></el-input>
@@ -17,25 +17,29 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="审核状态">
-        <el-select class="inputWid" v-model="params.status" clearable placeholder="全部">
+        <el-select class="inputWid" v-model="params.status" placeholder="全部">
           <el-option v-for="data in orderStatus" :key="data.status" :label="data.name" :value="data.status">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="订单类型">
-        <el-select class="inputWid" v-model="params.Category" clearable placeholder="全部">
+        <el-select class="inputWid" v-model="params.Category" placeholder="全部">
           <el-option v-for="data in orderType" :key="data.Category" :label="data.name" :value="data.Category">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="代理商">
-        <el-select class="inputWid" filterable v-model="params.agents" clearable placeholder="请选择">
+        <el-select class="inputWid1" filterable v-model="params.agents" clearable  placeholder="请选择">
           <el-option v-for="data in agents" :key="data.ChannelId" :label="data.ChannelName" :value="data.ChannelId">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchData">查询</el-button>
+      </el-form-item>
+      <el-button type="primary" v-if="IsSync" @click="onDownload()" :disabled="!tableData.length">导出</el-button>
+      <el-form-item>
+        <el-checkbox class="red" v-model="IsSync" @change="getJSList">显示未经工商检索的订单</el-checkbox>
       </el-form-item>
     </el-form>
   </div>
@@ -55,7 +59,7 @@
     <el-table-column prop="ContractAmount" label="合同金额" width="100">
     </el-table-column>
     <el-table-column label="礼包" width="120">
-      <template scope="scope">
+      <template slot-scope="scope">
           <span v-text="scope.row.GiftTypeName"></span>
           <span>{{scope.row.GiftPrice | formatePrice}}</span>
         </template>
@@ -69,7 +73,7 @@
     <el-table-column prop="CreateDate" label="订单日期" width="120">
     </el-table-column>
     <el-table-column v-if="category != 7 && category != 13 && category != 14" label="操作" width="250">
-      <template scope="scope">
+      <template slot-scope="scope">
         <el-button @click="viewOrder(scope.row)" type="text" size="small">查看</el-button>
         <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
         <el-button v-if="scope.row.Status != 2"  @click="deleteOrder(scope.row)" type="text" size="small">删除</el-button>
@@ -80,14 +84,14 @@
       </template>
     </el-table-column>
     <el-table-column v-if="category == 14" label="操作" width="140">
-      <template scope="scope">
+      <template slot-scope="scope">
         <el-button @click="viewOrder(scope.row)" type="text" size="small">查看</el-button>
         <el-button v-if="scope.row.Status === 2" @click="guaqi(scope.row)" type="text" size="small">挂起</el-button>
         <el-button v-if="scope.row.Status === 2" @click="stopguaqi(scope.row)" type="text" size="small">解挂</el-button>
       </template>
     </el-table-column>
     <el-table-column v-if="category == 7 || category == 13" label="操作" width="140">
-      <template scope="scope">
+      <template slot-scope="scope">
         <el-button @click="viewOrder(scope.row)" type="text" size="small">查看</el-button>
       </template>
     </el-table-column>
@@ -157,9 +161,11 @@ export default {
         starttime: null,
         endtime: null,
         status: 0,
-        Category: 0
+        Category: 0,
+        IsSync: ''
       },
       category: '',
+      IsSync: '',
       clearable: false
     }
   },
@@ -179,6 +185,7 @@ export default {
       let Category = this.params.Category
       let start = this.params.starttime
       let end = this.params.endtime
+      let IsSync = this.params.IsSync
       // console.log(legalPerson, cusname, '法人')
       review({
         limit: limit,
@@ -189,11 +196,35 @@ export default {
         status: status,
         Category: Category,
         start: start,
-        end: end
+        end: end,
+        IsSync: IsSync
       }).then((res) => {
         this.tableData = res.data
         this.pagination.total = res.Count
       })
+    },
+    onDownload() {
+      const {
+        cid,
+        cusname,
+        legalPerson,
+        status,
+        Category,
+        start,
+        end,
+        IsSync
+      } = this.params
+      const url = `/api/download/nosyncorders?cid=${cid || ''}&cusname=${cusname}&legalPerson=${legalPerson}&status=${status}&Category=${Category}&start=${start || ''}&end=${end || ''}&IsSync=${IsSync}`
+      window.open(url)
+    },
+    getJSList() {
+      console.log(this.IsSync, 'IsSync')
+      if (this.IsSync) {
+        this.params.IsSync = 0
+      } else {
+        this.params.IsSync = ''
+      }
+      this.fetchData()
     },
     getAgents() {
       agents().then((res) => {
@@ -372,7 +403,13 @@ export default {
 .order-search .inputWid {
   width: 100px;
 }
+.order-search .inputWid1 {
+  width: 150px;
+}
 .order-search .el-form--inline .el-form-item{
   margin-right: 5px;
+}
+.order-search .red {
+  color: red;
 }
 </style>

@@ -14,7 +14,7 @@
         </el-table>
       </el-form-item>
       <el-form-item class="form-height" label="付款凭证" required>
-        <img-upl v-for="item in url" :key="item" action="/api/files/2" :value='item' :readonly='true'></img-upl>
+        <img-upl :key="'img-upl-1-' + index" v-for="(item, index) in url" action="/api/files/2" :value='item' :readonly='true'></img-upl>
       </el-form-item>
       <el-form-item label="备注">
         <el-input type="textarea" v-model="ruleForm.Remark" :readonly='true'></el-input>
@@ -45,6 +45,9 @@ export default {
   created() {
     this.getDataList()
   },
+  updated () {
+    console.log(this.url, 'update')
+  },
   components: {
     imgUpl: ImageUploader
   },
@@ -52,8 +55,9 @@ export default {
     getDataList() {
       var id = this.Id
       rechargeListDetail(id).then((res) => {
-        this.ruleForm = res.data
-        this.url = JSON.parse(this.ruleForm.PhotoPath)
+        const ruleForm = res.data
+        this.ruleForm = ruleForm
+        this.url = JSON.parse(ruleForm.PhotoPath)
       })
     },
     getSummaries(param) {

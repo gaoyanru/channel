@@ -10,7 +10,7 @@
     <el-table-column prop="EndDate" :formatter="dateFormater" label="结束日期">
     </el-table-column>
     <el-table-column label="操作">
-      <template scope="promotions">
+      <template slot-scope="promotions">
           <el-button @click="promotionDelete(promotions.row)" type="text" size="small">删除</el-button>
         </template>
     </el-table-column>

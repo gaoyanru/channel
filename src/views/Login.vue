@@ -111,6 +111,10 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #204162;
+  background: url('../assets/images/back.png');
+  background-size: 100% 100%;
+  /* background-position: center */
+  background-repeat: no-repeat;
 }
 .login .el-form {
   padding: 0 20px;

@@ -1,18 +1,20 @@
 <template lang="html">
   <div class="header">
-  	<el-menu class="el-menu-demo" mode="horizontal" @select="handleSelect">
+  	<el-menu class="el-menu-demo menu-style" mode="horizontal" @select="handleSelect">
       <div class="pull-right">
       	<el-submenu index="1">
-        <template slot="title">设置</template>
-        <el-menu-item index="1-1">修改密码</el-menu-item>
-        <el-menu-item index="1-2">退出登陆</el-menu-item>
-      </el-submenu>
+          <template slot="title">{{userInfo.RealName || userInfo.RoleName}}</template>
+          <el-menu-item index="1-1">修改密码</el-menu-item>
+          <el-menu-item index="1-2">退出登陆</el-menu-item>
+        </el-submenu>
       </div>
-      <div class="pull-right info">
+      <!-- <div class="pull-right info">
         <span>欢迎 {{userInfo.RoleName}}：</span>
         <span>{{userInfo.RealName}} 进入！</span>
-      </div>
-      <h4 @click="goMainHtml" style="width: 200px">PILIPA渠道管理系统</h4>
+      </div> -->
+      <h4 @click="goMainHtml" class="bg" style="width: 250px">
+        渠道管理系统
+      </h4>
     </el-menu>
   </div>
 </template>
@@ -39,6 +41,7 @@ export default {
         logout().then((res) => {
           if (res.status) {
             location.href = '/#login'
+            window.location.reload()
           }
         })
       }
@@ -49,7 +52,7 @@ export default {
   }
 }
 </script>
-<style>
+<style lang='stylus'>
 h1,
 h2,
 h4 {
@@ -71,16 +74,41 @@ a {
   line-height: 42px;
   font-size: 14px;
 }
-
-.el-menu--horizontal .el-submenu .el-submenu__title {
-  height: 42px;
-  line-height: 42px;
-}
+.header
+  .el-menu--horizontal
+    .el-submenu
+      .el-menu
+        width: 100px
+        overflow: hidden
+      .el-submenu__title
+        color: white
+        height: 42px;
+        line-height: 42px;
+        margin-right: 20px
+        i
+          color: white
+        &:hover
+          background: none
+  .bg
+    float: left;
+    margin: 0;
+    height: 40px;
+    margin-left: 20px;
+    align-items: center;
+    display: flex;
+    padding-left: 120px;
+    background: url('../assets/images/logo1.png')
+    background-repeat: no-repeat
+    background-position-y: center;
 
 .el-menu--horizontal .el-submenu>.el-menu {
   top: auto;
 }
 .header h4 {
   cursor: pointer;
+}
+.header .menu-style {
+  background: #4a4949;
+  color: #fff;
 }
 </style>

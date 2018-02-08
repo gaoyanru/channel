@@ -131,7 +131,9 @@ header h2 {
 .message {
     word-break: break-all;
 }
-
+.pl-15 {
+  padding: 15px;
+}
 
 /*
 input control

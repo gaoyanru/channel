@@ -10,7 +10,7 @@
         <div class="item">发票项目：服务费</div>
         <div class="item">税号：{{view.InvoiceNumber}}</div>
         <div class="item">发票金额：{{view.Amount}}</div>
-        <div class="item">申请类型：{{view.ApplyType}}</div>
+        <div class="item">申请类型：{{view.ApplyType ? view.ApplyType : '非预借发票'}}</div>
         <div v-if="view.Category == 1" class="item item-width">开户银行：{{view.DepositBank}}</div>
         <div v-if="view.Category == 1" class="item item-width">对公账户：{{view.BankNo}}</div>
         <div class="item item-width">公司名称：{{view.ReceiveAddress.Name}}</div>

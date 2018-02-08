@@ -1,5 +1,5 @@
 <template>
-<div class="statis-orders">
+<div style="padding: 15px" class="statis-orders">
   <h3 class="vheader">订单统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload"></SearchParams>
   <el-table id="dataTable" :data="tableData" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum:[5,9]="downloadSum" @cell-click="downloadColumn">
@@ -13,7 +13,7 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" width="200">
     </el-table-column>
-    <el-table-column prop="Status" label="代理商是否解约" :formatter="handleStatus" width="100">
+    <el-table-column prop="Status" label="代理商状态" :formatter="handleStatus" width="100">
     </el-table-column>
     <el-table-column label="套餐类型" header-align="center">
       <el-table-column prop="ZeroYearNum" label="零税半年版" width="110">
@@ -66,10 +66,13 @@ export default {
         status: ''
       },
       cities: '',
-      tableHeight: 300
+      tableHeight: 300,
+      IsCenter: ''
     }
   },
   created() {
+    var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.IsCenter = userInfos.IsCenter
     this.fetchData()
   },
   mounted() {
@@ -183,9 +186,9 @@ export default {
       // console.log(row)
       var status = +row.Status
       if (status === 0) {
-        status = '是'
+        status = '解约'
       } else if (status > 0) {
-        status = '否'
+        status = '正常'
       }
       return status
     }

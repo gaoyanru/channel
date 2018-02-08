@@ -22,13 +22,13 @@
     </div>
     <el-table v-if="+category === 1" :data="tableData" style="width: 100%" @cell-click="sacnColumnDetail">
       <el-table-column prop="Title" label="公告标题" min-width="150">
-        <template scope="scope">
+        <template slot-scope="scope">
           <span :style="{color: scope.row.IsOverdue ? '#ccc' : '', borderColor: scope.row.IsOverdue ? '#ccc' : ''}" class="data-sign" v-if="scope.row.IsNew">新</span>
           <span :class="{'hover-change': scope.row.IsOverdue }">{{scope.row.Title}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="" label="公告范围" min-width="150">
-        <template scope="scope">
+        <template slot-scope="scope">
           <div v-if="scope.row.ChannelRoleNames && scope.row.CenterRoleNames" :title="scope.row.CenterRoleNames + '；' +scope.row.ChannelRoleNames">
             <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}">{{scope.row.CenterRoleNames}}</span>
             <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}">{{'；' + scope.row.ChannelRoleNames}}</span>
@@ -42,12 +42,12 @@
         </template>
       </el-table-column>
       <el-table-column prop="" label="发布日期" width="120">
-        <template scope="scope">
+        <template slot-scope="scope">
           <span :style="{color: scope.row.IsOverdue ? '#ccc' : ''}">{{scope.row.CreateDate}}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="120">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button v-if="!scope.row.IsOverdue" @click="reback(scope.row)" type="text" size="small">撤回</el-button>
         </template>
       </el-table-column>
@@ -111,7 +111,7 @@ export default {
   },
   methods: {
     goBackHome() {
-      this.$router.push({name: 'Main'})
+      this.$router.push({name: 'main.home'})
     },
     fetchData() {
       let limit = this.pagination.pageSize

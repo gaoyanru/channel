@@ -7,7 +7,7 @@
           <el-radio label="2" :disabled="isChange">价格优惠</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item class="add-promotion" label="活动名称" prop="PromotionName">
+      <el-form-item class="add-promotion mt0" label="活动名称" prop="PromotionName">
         <el-input class="promotion-input-width" v-model="ruleForm.PromotionName" :disabled="isChange"></el-input>
       </el-form-item>
       <el-form-item class="add-promotion" label="数量" prop="Num">
@@ -267,5 +267,8 @@ export default {
 }
 .add-promotion-model .el-form-item__label {
  text-align: left;
+}
+.add-promotion-model .mt0 {
+  margin-bottom: 0;
 }
 </style>

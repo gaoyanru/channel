@@ -1,5 +1,5 @@
 <template>
-<div class="invoiceReview">
+<div style="padding: 15px" class="invoiceReview">
   <h3 class="vheader">发票审核</h3>
   <div class="vsearch">
     <el-form ref="searchParam" :inline="true" :model="params">
@@ -50,7 +50,7 @@
     <!-- <el-table-column prop="Status" label="发票审批状态" :formatter="StatusFormat" align="center" width="130">
     </el-table-column> -->
     <el-table-column label="操作" align="center" width="200">
-      <template scope="scope">
+      <template slot-scope="scope">
           <el-button @click="scan(scope.row)" type="text" size="small">查看</el-button>
           <el-button @click="accept(scope.row)" type="text" size="small">开具发票</el-button>
           <el-button @click="reject(scope.row)" type="text" size="small">拒绝开票</el-button>

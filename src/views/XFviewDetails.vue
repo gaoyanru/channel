@@ -1,5 +1,5 @@
 <template>
-<div class="view-detail-1">
+<div style="padding: 15px" class="view-detail-1">
   <div class="vheader">
     <h3>{{commonData.title}}</h3>
     <div class="header-right">

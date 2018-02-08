@@ -25,18 +25,22 @@
             </div>
 
             <el-row>
-              <el-col :span='12'>
+              <el-col :span='14'>
                 <el-form-item label='公司名称：' required>
                   <span v-if="!modify">
                     {{postData.Customer.Name}}
-                    <span v-if="postData.Customer.ServiceCompanyCode" class="IsSync">工商检索</span>
+                    <span v-if="postData.Customer.ServiceCompanyCode && IsCenter == 1" class="IsSync">工商检索</span>
                   </span>
                   <el-input v-if="modify" class='company-search' v-model='postData.Customer.Name'></el-input>
+                  <el-button v-if="modify" type="primary" class="company-alert" @click="toCheck">检索</el-button>
                   <el-button v-if="modify" type="primary" class="company-alert" @click="getCompanyInfo">同步官方</el-button>
+                  <ul class="dropdown-menu dropdown-company-list" aria-labelledby="exampleInputAmount">
+                    <li v-for="item in companyList" @click="companySelect(item.Name, item.id)"><a href="javascript:void(0)">{{item.Name}}</a></li>
+                  </ul>
                 </el-form-item>
                 <!-- <el-button v-if="modify" type="primary" class="company-alert" @click="getCompanyInfo">同步官方</el-button> -->
               </el-col>
-              <el-col :span='12'>
+              <el-col :span='10'>
                 <el-form-item label='所在城市：' required>
                   <el-select v-model="postData.Customer.CityCode" placeholder='请选择' :disabled="!modify">
                     <el-option v-for="item in citys" :key="item.CityCode" :label="item.CityName" :value="item.CityCode">
@@ -47,12 +51,12 @@
             </el-row>
 
             <el-row>
-              <el-col :span='12'>
+              <el-col :span='14'>
                 <el-form-item label='联系人：' required>
                   <el-input v-model='postData.Customer.Contacts' :readonly="!modify" :maxlength="10"></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span='12'>
+              <el-col :span='10'>
                 <el-form-item label='手机号：' required>
                   <el-input v-model='postData.Customer.Mobile' :readonly="!modify" :maxlength="11"></el-input>
                 </el-form-item>
@@ -64,11 +68,11 @@
             </div>
 
             <el-row>
-              <el-col :span='12'>
+              <el-col :span='14'>
                 <custom-upload v-model='postData.Customer.PersonCardPath' :uploaded="uploaded1" title='请上传清晰的身份证人像面，图片大小不要超过3M' :disabled="!modify"></custom-upload>
                 <custom-upload v-model='postData.Customer.BusinessLicense' title='请上传清晰的营业执照，图片大小不要超过3M' class='mt-30' :disabled="!modify"></custom-upload>
               </el-col>
-              <el-col :span='12'>
+              <el-col :span='10'>
                 <el-form-item label='法人姓名：' required>
                   <el-input v-model='postData.Customer.LegalPerson' :readonly="!modify" :maxlength="20"></el-input>
                 </el-form-item>
@@ -103,12 +107,12 @@
             </div>
 
             <el-row>
-              <el-col :span='12'>
+              <el-col :span='14'>
                 <el-form-item label='合同编号：' required>
                   <el-input v-model='postData.ContractNO' :readonly="!modify"></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span='12'>
+              <el-col :span='10'>
                 <el-form-item label='纳税人类别：' required>
                   <el-radio-group v-model="postData.Customer.AddedValue">
                     <el-radio class="radio-style-bg" label='1' :disabled="true">小规模</el-radio>
@@ -138,7 +142,7 @@
             </el-row>
 
             <el-row>
-              <el-col :span='12'>
+              <el-col :span='14'>
                 <el-form-item label='开始账期：' required>
                   <el-date-picker v-if="modify && !postData.FreChangeOrderId && postData.IsChange === 0 && postData.IsChanging === '0'" v-model="postData.ServiceStart" type="month" @change="setServiceEnd" :clearable="false"></el-date-picker>
                   <el-date-picker v-if="modify && postData.FreChangeOrderId && postData.IsChange === 0 && postData.IsChanging === '0'" v-model="postData.ServiceStart" type="month" @change="setServiceEnd" :disabled="postData.Status === 2" :picker-options="pickerOptions" :clearable="false"></el-date-picker>
@@ -146,7 +150,7 @@
                   <el-date-picker v-if="!modify" v-model="postData.ServiceStart" type="month" readonly></el-date-picker>
                 </el-form-item>
               </el-col>
-              <el-col :span='12'>
+              <el-col :span='10'>
                 <el-form-item label='结束账期：' required>
                   <el-date-picker v-model="postData.ServiceEnd" type="month" :readonly="true"></el-date-picker>
                 </el-form-item>
@@ -220,7 +224,9 @@
     modifyOrders,
     getChannelGift,
     urlsignkey,
-    balance
+    balance,
+    getcustomerlistbyty,
+    getcustomerbyty
 } from '../api/api'
   import Dialog from '@/service/dialog.js'
   import CompanyInfo from '@/views/components/companyInfo'
@@ -242,6 +248,8 @@
         title: '订单查看',
         balance: '',
         ServiceCompanyCode: '', // 后端业务需要
+        companyList: [],
+        IsCenter: '',
         pickerOptions: {
           disabledDate(time) {
             console.log(time, 'pickerOptions')
@@ -263,6 +271,8 @@
       imgUpl: ImageUploader
     },
     created() {
+      var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+      this.IsCenter = userInfos.IsCenter
       if (this.modify) {
         this.title = '订单修改'
       }
@@ -308,6 +318,106 @@
       this.getBalance()
     },
     methods: {
+      toCheck() {
+        // this.postData.IsSync = 1
+        if (!this.postData.Customer.Name) {
+          // this.searchError = '请输入公司名称！'
+          this.$message({
+            message: '请输入公司名称！',
+            type: 'warning'
+          })
+          return
+        }
+        if (this.postData.Customer.Name && this.postData.Customer.Name.length < 3) {
+          // this.searchError = '请输入准确完整的公司名称！'
+          this.$message({
+            message: '请输入准确完整的公司名称！',
+            type: 'warning'
+          })
+          return
+        }
+        this.getMoreCompanyName(this.postData.Customer.Name, () => {
+          // this.searchError = this.companyList ? '' : '抱歉，没有检索到公司信息！'
+          if (!this.companyList) {
+            this.$message({
+              message: '抱歉，没有检索到公司信息！',
+              type: 'warning'
+            })
+            return
+          }
+          if (this.postData.Customer.Name === '' || this.postData.Customer.Name.length < 3 || this.companyList.length === 0) {
+            $('.dropdown-company-list').parent().removeClass('open')
+          } else {
+            $('.dropdown-company-list').parent().addClass('open')
+          }
+        })
+      },
+      getMoreCompanyName(val, cb) {
+        getcustomerlistbyty(encodeURI(val)).then(res => {
+          if (res.status) {
+            for (var i in res.data) {
+              res.data[i]['Name'] = res.data[i].name
+            }
+            this.companyList = res.data
+            cb && cb()
+          }
+        })
+      },
+      companySelect(name, id) {
+        $('.dropdown-company-list').parent().removeClass('open')
+        getcustomerbyty(id).then(res => {
+          var data = res.data
+          if (!data) {
+            return
+          }
+          if (this.postData.Customer.Name !== data.CompanyName) {
+            this.$message({
+              message: '客户名称不一致，不允许修改！',
+              type: 'warning'
+            })
+            return
+          }
+          if (data.BusnissDeadline && data.BusnissDeadline.substr(0, 4) !== '0001' && data.BusnissDeadline.substr(0, 4) !== '9999') {
+            data.BusnissDeadline = new Date(data.BusnissDeadline)
+            this.postData.Customer.BusnissDeadline = data.BusnissDeadline
+            data.NoDeadLine = 0
+            this.postData.Customer.NoDeadLine = 0
+            this.checked = false
+            // this.IsBusnissDeadlineReadonly = true
+            // this.isCompanyReadonly = true
+          } else { // 没有营业结束期限 但是有开始期限默认选择无期限要
+            if (data.RegisterDate && data.BusnissDeadline.substr(0, 4) !== '0001' && data.BusnissDeadline.substr(0, 4) !== '9999') {
+              data.NoDeadLine = 1
+              this.postData.Customer.NoDeadLine = 1
+              this.checked = true
+              // this.IsBusnissDeadlineReadonly = true
+              // this.isCompanyReadonly = true
+            }
+          }
+          data.Name = data.CompanyName.trim()
+          if (!data.RegisterDate) {
+            // data.RegisterDate = ''
+          } else {
+            data.RegisterDate = new Date(data.RegisterDate)
+            this.postData.Customer.RegisterDate = data.RegisterDate
+          }
+          // 处理检索出的信息不能修改 没检索出可以修改 且一旦点击检索公司名称不能修改
+          if (data.LegalPerson) {
+            this.postData.Customer.LegalPerson = data.LegalPerson
+          } else {
+            // this.isLegalPersonReadonly = false
+          }
+          if (data.Address) { this.postData.Customer.Address = data.Address }
+          if (data.RegNO) { this.postData.Customer.RegNO = data.RegNO }
+          // if (data.RegisterDate) { this.postData.Customer.RegisterDate = data.RegisterDate }
+          if (data.RegisteredCapital) { this.postData.Customer.RegisteredCapital = data.RegisteredCapital }
+          if (data.BusinessScope) { this.postData.Customer.BusinessScope = data.BusinessScope }
+          this.postData.ServiceCompanyCode = data.ServiceCompanyCode
+          setTimeout(() => {
+            this.companySelected = false
+          }, 0)
+        })
+      },
       getBalance() {
         balance(this.channelid).then(res => {
           if (res.status) {
@@ -539,7 +649,6 @@
               })
               return
             }
-            console.log(this.postData.Customer.NoDeadLine, this.postData.Customer.BusnissDeadline, '22')
             if (!this.postData.Customer.NoDeadLine && !this.postData.Customer.BusnissDeadline) {
               this.$message({
                 message: '请填写营业期限',
@@ -603,18 +712,6 @@
         getpersoncardbypath(path).then(res => {
           console.log(res)
           if (res.status && res.data) {
-            // if (this.postData.Customer.IsSync) {
-            //   if (this.postData.Customer.LegalPerson && this.postData.Customer.LegalPerson === res.data.LegalPerson) {
-            //     this.postData.Customer.PersonCardID = res.data.PersonCardID
-            //   } else if (this.postData.Customer.LegalPerson && this.postData.Customer.LegalPerson !== res.data.LegalPerson) {
-            //     this.$message({
-            //       message: '身份证上的法人姓名与营业执照上的法人不符',
-            //       type: 'warning'
-            //     })
-            //   }
-            // } else {
-            //
-            // }
             if (this.postData.Customer.IsSync && this.postData.Customer.LegalPerson && this.postData.Customer.LegalPerson === res.data.LegalPerson) {
               this.postData.Customer.PersonCardID = res.data.PersonCardID
             } else if (this.postData.Customer.IsSync && this.postData.Customer.LegalPerson && this.postData.Customer.LegalPerson !== res.data.LegalPerson) {
@@ -780,9 +877,39 @@
   margin-left: 10px;
 }
 .add-order2 .add-order-container .el-date-editor.el-input {
-  width: 130px;
+  width: 120px;
 }
 .add-order2 .add-order-container form input:nth-child(2) {
-  width: 130px;
+  width: 120px;
+}
+.add-order2 .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  min-width: 160px;
+  display: none;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  font-size: 14px;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,.15);
+}
+.add-order2 .dropdown-menu>li>a {
+  clear: both;
+  font-weight: 400;
+  color: #333;
+  display: block;
+  padding: 3px 20px;
+  line-height: 1.42857143;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.add-order2 .open>.dropdown-menu {
+  display: block;
 }
 </style>

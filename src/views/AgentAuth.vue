@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style="padding: 15px">
   <h3 class="vheader">代理审核</h3>
   <div class="vsearch">
     <el-form ref="searchParam" :inline="true" :model="searchParam" label-width="80px">
@@ -27,7 +27,7 @@
     <el-table-column prop="Status" :formatter="StatusFormat" label="状态">
     </el-table-column>
     <el-table-column label="操作" width="180">
-      <template scope="scope">
+      <template slot-scope="scope">
           <el-button @click="viewAgent(scope.row)" type="text" size="small">修改</el-button>
           <el-button @click="deleteAgent(scope.row)" type="text" size="small">删除</el-button>
           <el-button @click="passAgent(scope.row)" type="text" size="small">通过</el-button>

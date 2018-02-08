@@ -1,21 +1,23 @@
 <template>
-<div>
-  <h3 class="vheader">代理管理</h3>
+<div style="padding: 15px">
+  <h3 v-if="IsCenter == 1" class="vheader">代理管理</h3>
+  <h3 v-if="IsCenter == 0" class="vheader">下级代理商管理</h3>
   <div class="vsearch">
     <el-form ref="searchParam" :inline="true" :model="searchParam" label-width="60px">
       <el-form-item label="代理商">
         <el-input placeholder="代理商名称" v-model="searchParam.channelname"></el-input>
       </el-form-item>
       <el-form-item label="状态">
-        <el-select v-model="searchParam.status " clearable placeholder="全部">
+        <el-select v-model="searchParam.status" clearable placeholder="全部">
           <el-option v-for="data in agentStatus" :key="data.status" :label="data.name" :value="data.status">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchData">查询</el-button>
-        <el-button v-if="category != 14 && category != 7 && category != 13 && category != 10" type="primary" @click="addAgent()">添加代理商</el-button>
-        <el-button type="primary" @click="onDownload()" :disabled="!tableData.length">导出</el-button>
+        <el-button v-if="IsCenter == 1 && category != 14 && category != 7 && category != 13 && category != 10" type="primary" @click="addAgent()">添加代理商</el-button>
+        <el-button v-if="IsCenter == 0" type="primary" @click="addAgent()">添加下级代理商</el-button>
+        <el-button v-if="IsCenter == 1" type="primary" @click="onDownload()" :disabled="!tableData.length">导出</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -34,8 +36,8 @@
     </el-table-column>
     <el-table-column prop="Balance" label="余额" width="130">
     </el-table-column>
-    <el-table-column v-if="category != 7 && category != 13 && category != 14 && category != 10" label="操作" min-width="300">
-      <template scope="scope">
+    <el-table-column v-if="IsCenter == 1 && category != 7 && category != 13 && category != 14 && category != 10" label="操作" min-width="300">
+      <template slot-scope="scope">
         <div v-if="scope.row.Status === 1">
           <el-button @click="viewAgent(scope.row)" type="text" size="small">修改</el-button>
           <el-button @click="deleteAgent(scope.row)" type="text" size="small">删除</el-button>
@@ -57,9 +59,15 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column v-if="category == 7 || category == 13" label="操作" width="100px">
-      <template scope="scope">
+    <el-table-column v-if="IsCenter == 1 && category == 7 || category == 13" label="操作" width="100px">
+      <template slot-scope="scope">
         <el-button  @click="setCustomerSettings(scope.row)" type="text" size="small">客户设置</el-button>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="IsCenter == 0" label="操作" width="100px">
+      <template slot-scope="scope">
+        <el-button @click="viewAgent(scope.row)" type="text" size="small">修改</el-button>
+        <el-button v-if="scope.row.Status !== 1" @click="deleteAgent(scope.row)" type="text" size="small">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -112,6 +120,7 @@ export default {
       channelId: '',
       dialog2Visible: false,
       category: '',
+      IsCenter: '',
       signkey: {},
       agentStatus: [{
         name: '全部',
@@ -130,11 +139,13 @@ export default {
     }
   },
   created() {
-    // console.log(JSON.parse(sessionStorage.getItem('userInfo')), 'userInfo')
+    console.log(JSON.parse(sessionStorage.getItem('userInfo')), 'userInfo')
     var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
     this.RoleId = userInfos.RoleId
-    this.category = JSON.parse(sessionStorage.getItem('userInfo')).Category
-    console.log(this.category, 'category')
+    this.category = userInfos.Category
+    this.IsCenter = userInfos.IsCenter
+    // this.category = JSON.parse(sessionStorage.getItem('userInfo')).Category
+    console.log(this.IsCenter, this.category, 'category')
     this.fetchData()
     this.getsignkey()
   },
@@ -172,18 +183,30 @@ export default {
       })
     },
     viewAgent(agent) {
+      var title = ''
+      if (this.IsCenter === 1) {
+        title = '修改代理商'
+      } else {
+        title = '修改下级代理商'
+      }
       Dialog(AgentDialog, {
         channelId: agent.ChannelId,
         signKey: this.signkey,
-        title: '修改代理商'
+        title: title
       }).then(() => {
         this.fetchData()
       })
     },
     addAgent() {
+      var title = ''
+      if (this.IsCenter === 1) {
+        title = '添加代理商'
+      } else {
+        title = '添加下级代理商'
+      }
       Dialog(AgentDialog, {
         signKey: this.signkey,
-        title: '添加代理商'
+        title: title
       }).then(res => this.fetchData())
     },
     dialog2Cacel: function () {

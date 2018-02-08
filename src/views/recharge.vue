@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style="padding: 15px">
   <h3 class="vheader">财务信息</h3>
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params">
@@ -27,7 +27,7 @@
     <el-table-column prop="Balance" label="余额" width="120">
     </el-table-column>
     <el-table-column label="操作" width="200">
-      <template scope="scope">
+      <template slot-scope="scope">
           <el-button @click="addMoney(scope.row)" type="text" size="small">充值</el-button>
           <el-button @click="addMoneyDetail(scope.row)" type="text" size="small">充值明细</el-button>
           <el-button @click="payDetail(scope.row)" type="text" size="small">支付明细</el-button>

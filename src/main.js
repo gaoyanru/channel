@@ -10,11 +10,11 @@ import Plugins from './plugins/install'
 import router from './router'
 import axios from 'axios'
 import ElementUI from 'element-ui'
-import Vuex from 'vuex'
 import _ from 'lodash'
 import tableSum from './service/tableSum'
-
-Vue.use(Vuex)
+import store from '@/store'
+import 'bootstrap'
+import 'viewerjs'
 Vue.use(Plugins)
 Vue.prototype.$ajax = axios
 
@@ -22,18 +22,6 @@ Vue.use(ElementUI)
 Vue.use(tableSum)
 
 window._ = _
-
-const store = new Vuex.Store({
-  state: {
-    userInfo: sessionStorage.userInfo && JSON.parse(sessionStorage.userInfo) || {}
-  },
-  mutations: {
-    updateUserInfo(state) {
-      state.userInfo = sessionStorage.userInfo && JSON.parse(sessionStorage.userInfo) || {}
-      state.isShowLogin = false
-    }
-  }
-})
 
 Vue.config.productionTip = false
 

@@ -1,5 +1,5 @@
 <template>
-<div class="charge-back">
+<div style="padding: 15px" class="charge-back">
   <h3 class="vheader">退单记录</h3>
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params">
@@ -13,7 +13,7 @@
       <el-form-item label="代理商">
         <el-autocomplete class="inputWid" v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch"></el-autocomplete>
       </el-form-item>
-      <el-form-item label="代理商是否解约">
+      <el-form-item label="代理商状态">
         <el-select class="selectWid" v-model="params.status">
           <el-option v-for="item in Status" :key="item.status" :label="item.statusName" :value="item.status">
           </el-option>
@@ -48,7 +48,7 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" min-width="200">
     </el-table-column>
-    <el-table-column prop="Status" label="代理商是否解约">
+    <el-table-column prop="Status" label="代理商状态">
     </el-table-column>
     <el-table-column prop="CustomerName" label="公司名称" min-width="200">
     </el-table-column>
@@ -67,7 +67,7 @@
     <el-table-column prop="BLAmount" label="订单可开票金额" width="140">
     </el-table-column>
     <el-table-column label="操作" width="80">
-      <template scope="scope">
+      <template slot-scope="scope">
         <el-button @click="viewOrder(scope.row)" type="text" size="small">查看</el-button>
       </template>
     </el-table-column>
@@ -95,8 +95,8 @@ export default {
       },
       Status: [
         {status: '', statusName: '全部'},
-        {status: 0, statusName: '是'},
-        {status: 1, statusName: '否'}
+        {status: 1, statusName: '正常'},
+        {status: 0, statusName: '解约'}
       ],
       types: [
         {type: 0, name: '全部'},

@@ -336,8 +336,8 @@
         getpersoncardbypath(path).then(res => {
           console.log(res)
           if (res.status && res.data) {
-            this.postData.Customer.LegalPerson = res.data.LegalPerson
-            this.postData.Customer.PersonCardID = res.data.PersonCardID
+            this.postData.Customer.LegalPerson = res.data.LegalPerson ? res.data.LegalPerson : this.postData.Customer.LegalPerson
+            this.postData.Customer.PersonCardID = res.data.PersonCardID ? res.data.PersonCardID : this.postData.Customer.PersonCardID
           } else if (res.status && !res.data) {
             // this.postData.Customer.PersonCardPath = ''
             this.$message({

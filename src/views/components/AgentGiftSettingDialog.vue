@@ -10,7 +10,7 @@
     <el-table-column prop="Num" label="数量">
     </el-table-column>
     <el-table-column label="操作">
-      <template scope="gifts">
+      <template slot-scope="gifts">
         <el-button @click="giftDelete(gifts.row)" type="text" size="small">删除</el-button>
       </template>
     </el-table-column>

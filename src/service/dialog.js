@@ -12,6 +12,7 @@ export default (Compoment, propsData) => {
     dialog.$children[0].$once('close', res => {
       dialog.$destroy()
       document.body.removeChild(dialog.$el)
+      reject(res)
     })
   })
 }

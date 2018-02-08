@@ -1,5 +1,5 @@
 <template>
-<div class="recharge-check">
+<div style="padding: 15px" class="recharge-check">
   <h3 class="vheader">充值审核</h3>
   <div class="vsearch">
     <el-form ref="params" :inline="true" :model="params">
@@ -13,7 +13,7 @@
       <el-form-item label="代理商">
         <el-autocomplete class="form-width2" v-model="params.channelname" :trigger-on-focus="false" :fetch-suggestions="querySearch"></el-autocomplete>
       </el-form-item>
-      <el-form-item class="form-width1" label="代理商是否解约">
+      <el-form-item class="form-width1" label="代理商状态">
         <el-select v-model="params.channelstatus">
           <el-option v-for="item in Status" :key="item.status" :label="item.statusName" :value="item.status">
           </el-option>
@@ -38,7 +38,7 @@
     </el-table-column>
     <el-table-column prop="ChannelName2" label="二级代理商" min-width="200">
     </el-table-column>
-    <el-table-column prop="channelstatus" label="代理商是否解约" :formatter="handleStatus" width="100">
+    <el-table-column prop="channelstatus" label="代理商状态" :formatter="handleStatus" width="100">
     </el-table-column>
     <el-table-column prop="Amount" label="充值金额" width="120">
     </el-table-column>
@@ -51,14 +51,14 @@
     <el-table-column prop="AuditOpinion" label="审核意见" width="100">
     </el-table-column>
     <el-table-column v-if="category != 7 && category != 13" label="操作" width="200">
-      <template scope="scope">
+      <template slot-scope="scope">
         <el-button @click="view(scope.row)" type="text" size="small">查看</el-button>
         <el-button v-if="scope.row.Status === 1" @click="pass(scope.row)" type="text" size="small">通过</el-button>
         <el-button v-if="scope.row.Status === 1" @click="refuse(scope.row)" type="text" size="small">驳回</el-button>
       </template>
     </el-table-column>
     <el-table-column v-else label="操作" width="200">
-      <template scope="scope">
+      <template slot-scope="scope">
         <el-button @click="view(scope.row)" type="text" size="small">查看</el-button>
       </template>
     </el-table-column>
@@ -107,8 +107,8 @@ export default {
       }],
       Status: [
         {status: '', statusName: '全部'},
-        {status: 0, statusName: '是'},
-        {status: 1, statusName: '否'}
+        {status: 1, statusName: '正常'},
+        {status: 0, statusName: '解约'}
       ],
       clearable: false,
       category: ''
@@ -135,7 +135,7 @@ export default {
         start: starttime,
         end: endtime,
         channelname: channelname,
-        type: status,
+        status: status,
         channelstatus: channelstatus
       }).then((res) => {
         console.log(res.data)
@@ -205,9 +205,9 @@ export default {
       // console.log(row)
       var status = +row.channelstatus
       if (status === 0) {
-        status = '是'
+        status = '解约'
       } else if (status > 0) {
-        status = '否'
+        status = '正常'
       }
       return status
     },

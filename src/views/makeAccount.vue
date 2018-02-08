@@ -1,8 +1,8 @@
 <template>
-<div class="baobiao4">
+<div style="padding: 15px" class="baobiao4">
   <h3 class="vheader">做账与报税数据统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload" :make-account="true"></SearchParams>
-  <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
+  <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum:[5,6,10]="downloadSum">
     <el-table-column prop="PartitionName" label="大区" width="120">
     </el-table-column>
     <el-table-column prop="ProvinceName" label="省" width="120">
@@ -59,10 +59,13 @@ export default {
         channelname: ''
       },
       cities: '',
-      tableHeight: 300
+      tableHeight: 300,
+      accountids: ''
     }
   },
   created() {
+    var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.IsCenter = userInfos.IsCenter
     this.fetchData()
   },
   mounted() {
@@ -82,6 +85,11 @@ export default {
     fetchData() {
       agentaccountcustomer(this.params).then((res) => {
         this.tableData = res.data
+        var accountid = []
+        for (var i in this.tableData) {
+          accountid.push(this.tableData[i].AccountId)
+        }
+        this.accountids = accountid.join(',')
       })
     },
     onSearch(params) {
@@ -93,6 +101,29 @@ export default {
     },
     onDownload() {
       ExcelDown().tableToExcel('dataTable', '做账与报税数据统计')
+    },
+    downloadSum(index) {
+      console.log('合计下载')
+      var {
+        enddate
+      } = this.params
+      if (!enddate) {
+        var date = new Date()
+        enddate = date
+      }
+      var url = ''
+      var agent = 'https://agent.pilipa.cn/api/v1/AgentExport.ashx' // 正式
+      // var agent = 'https://ri.i-counting.cn/api/v1/AgentExport.ashx'
+      // var agent = 'http://123.56.31.133:33/api/v1/AgentExport.ashx'
+      if (index === 5) {
+        url = agent + `?type=getmonitionandunmakeaccount&accountid=${this.accountids}&enddate=${enddate || ''}`
+      } else if (index === 6) {
+        url = agent + `?type=getmakeaccountandunconfirm&accountid=${this.accountids}&enddate=${enddate || ''}`
+      } else if (index === 10) {
+        url = agent + `?type=getuntax&accountid=${this.accountids}&enddate=${enddate || ''}`
+      }
+      window.open(url)
+      // alert(index)
     },
     getSummaries(param) {
       const {

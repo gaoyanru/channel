@@ -18,7 +18,7 @@ exports.install = Vue => {
             let val = binding.value
             let arg = JSON.parse(binding.arg)
             arg.forEach(function (item) {
-              console.log(footTr.children[item])
+              // console.log(footTr.children[item])
               let el = footTr.children[item] || null
               if (el) {
                 el.setAttribute('style', 'cursor: pointer; color: #20a0ff; text-decoration: underline;')

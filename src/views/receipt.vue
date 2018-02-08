@@ -1,8 +1,8 @@
 <template>
-<div class="baobiao3">
+<div style="padding: 15px" class="baobiao3">
   <h3 class="vheader">传票数据统计</h3>
   <SearchParams :length="tableData.length" @search="onSearch" @download="onDownload" :make-account="true"></SearchParams>
-  <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum>
+  <el-table id="dataTable" :data="tableData" @cell-click="downloadColumn" border style="width: 100%" :show-summary="true" :summary-method="getSummaries" :max-height="tableHeight" v-table-sum:[3,6,7,10]="downloadSum">
     <!-- <el-table-column prop="PartitionName" label="日期" width="120">
     </el-table-column> -->
     <el-table-column prop="PartitionName" label="大区" width="120">
@@ -59,10 +59,14 @@ export default {
         channelname: ''
       },
       cities: '',
-      tableHeight: 300
+      tableHeight: 300,
+      channelids: '',
+      accountids: ''
     }
   },
   created() {
+    var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.IsCenter = userInfos.IsCenter
     this.fetchData()
   },
   mounted() {
@@ -72,6 +76,14 @@ export default {
     fetchData() {
       agentreceiptcustomer(this.params).then((res) => {
         this.tableData = res.data
+        var channel = []
+        var accountid = []
+        for (var i in this.tableData) {
+          channel.push(this.tableData[i].ChannelId)
+          accountid.push(this.tableData[i].AccountId)
+        }
+        this.channelids = channel.join(',')
+        this.accountids = accountid.join(',')
       })
     },
     handleNum(row) {
@@ -120,6 +132,31 @@ export default {
 
       return sums
     },
+    downloadSum(index) {
+      console.log('合计下载')
+      var {
+        enddate
+      } = this.params
+      if (!enddate) {
+        var date = new Date()
+        enddate = date
+      }
+      var url = ''
+      var agent = 'https://agent.pilipa.cn/api/v1/AgentExport.ashx' // 正式
+      // var agent = 'https://ri.i-counting.cn/api/v1/AgentExport.ashx'
+      // var agent = 'http://123.56.31.133:33/api/v1/AgentExport.ashx'
+      if (index === 3) {
+        url = agent + `?type=unurge&accountid&accountid=${this.accountids}&enddate=${enddate || ''}`
+      } else if (index === 6) {
+        url = agent + `?type=requirereceipt&accountid=${this.accountids}&enddate=${enddate || ''}`
+      } else if (index === 7) {
+        url = agent + `?type=receiptuncomplete&accountid=${this.accountids}&enddate=${enddate || ''}`
+      } else if (index === 10) {
+        url = agent + `?type=rejectreceipt&accountid=${this.accountids}&enddate=${enddate || ''}`
+      }
+      window.open(url)
+      // alert(index)
+    },
     downloadColumn(row, column, cell) {
       var AccountId = row.AccountId
       // console.log(AccountId)
@@ -131,6 +168,7 @@ export default {
       // console.log(enddate)
       var agent = 'https://agent.pilipa.cn/api/v1/AgentExport.ashx'
       // var agent = 'https://ri.i-counting.cn/api/v1/AgentExport.ashx'
+      // var agent = 'http://123.56.31.133:33/api/v1/AgentExport.ashx'
       var url = ''
       if (cell.cellIndex === 5) {
         url = agent + `?type=ReceiptDetail&accountid=${AccountId || ''}&enddate=${enddate || ''}`
@@ -140,6 +178,9 @@ export default {
         url = agent + `?type=urge&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 10) {
         url = agent + `?type=requirereceipt&accountid=${AccountId || ''}&enddate=${enddate || ''}`
+      } else if (cell.cellIndex === 11) {
+        // 新需求
+        url = agent + `?type=receiptuncomplete&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else if (cell.cellIndex === 14) {
         url = agent + `?type=rejectreceipt&accountid=${AccountId || ''}&enddate=${enddate || ''}`
       } else {
@@ -155,27 +196,13 @@ export default {
 }
 </script>
 <style>
-.baobiao3 .el-table__body tr td:nth-child(6) .cell{
-  cursor: pointer;
-  color: #20a0ff;
-  text-decoration: underline;
-}
-.baobiao3 .el-table__body tr td:nth-child(8) .cell{
-  cursor: pointer;
-  color: #20a0ff;
-  text-decoration: underline;
-}
-.baobiao3 .el-table__body tr td:nth-child(9) .cell{
-  cursor: pointer;
-  color: #20a0ff;
-  text-decoration: underline;
-}
-.baobiao3 .el-table__body tr td:nth-child(11) .cell{
-  cursor: pointer;
-  color: #20a0ff;
-  text-decoration: underline;
-}
-.baobiao3 .el-table__body tr td:nth-child(15) .cell{
+.baobiao3 .el-table__body tr td:nth-child(6) .cell,
+.baobiao3 .el-table__body tr td:nth-child(8) .cell,
+.baobiao3 .el-table__body tr td:nth-child(9) .cell,
+.baobiao3 .el-table__body tr td:nth-child(11) .cell,
+.baobiao3 .el-table__body tr td:nth-child(12) .cell,
+.baobiao3 .el-table__body tr td:nth-child(15) .cell
+{
   cursor: pointer;
   color: #20a0ff;
   text-decoration: underline;

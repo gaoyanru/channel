@@ -105,8 +105,8 @@ export default {
 <style scoped>
 .con {
   padding-left: 32px;
-  height: 35px;
   line-height: 35px;
+  height: auto;
 }
 
 .moneyWid {

@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style="padding: 15px">
   <h3 class="vheader">活动类型设置</h3>
   <promotion-child :common-promotion="isCommonPromotion"></promotion-child>
 </div>

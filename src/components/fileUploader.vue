@@ -15,17 +15,17 @@
         :auto-upload="false"
         :multiple="true">
         <el-button slot="trigger" type="primary">添加文件</el-button>
-        <span class="file-declare">单个文件最大4M</span>
+        <span class="file-declare">单个文件最大10M</span>
         <el-table :data="fileList">
           <el-table-column property="name" label="文件名" min-width="150"></el-table-column>
           <el-table-column property="filesize" label="大小" width="80"></el-table-column>
           <el-table-column label="操作" width="80">
-            <template scope="scope">
+            <template slot-scope="scope">
               <el-button @click="deleteFile(scope.row)" type="text" size="small" :disabled="canDelete">删除</el-button>
             </template>
           </el-table-column>
           <el-table-column label="状态" width="80">
-            <template scope="scope">
+            <template slot-scope="scope">
               <span v-if="scope.row.showIcon === 2"><i class="el-icon-check"></i></span>
               <span v-if="scope.row.showIcon === 3"><i class="el-icon-close"></i></span>
               <span v-if="scope.row.showIcon === 1"><i class="el-icon-loading"></i></span>
@@ -102,8 +102,8 @@ export default {
     submitUpload() {
       for (var j in this.fileList) {
         var fileSize = this.fileList[j].size / 1024 / 1024
-        if (fileSize > 4) {
-          this.$message.error('文件大小超过限制，请删除大于4M的文件！')
+        if (fileSize > 10) {
+          this.$message.error('文件大小超过限制，请删除大于10M的文件！')
           return false
         }
       }

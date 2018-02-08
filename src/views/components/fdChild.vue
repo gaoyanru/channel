@@ -17,7 +17,7 @@
       <el-table-column property="RebatesRatio" label="返点比率" width="100"></el-table-column>
       <el-table-column property="RewardsMoney" label="返点金额" width="100"></el-table-column>
       <el-table-column label="操作">
-        <template scope="scope">
+        <template slot-scope="scope">
             <el-button v-if="scope.row.access" @click="fetch(scope.row)" type="text" size="small">计算</el-button>
             <el-button v-if="scope.row.RebatesRatio && scope.row.fdStatus < 2" @click="set(scope.row.fd)" type="text" size="small">返点</el-button>
           </template>

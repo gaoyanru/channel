@@ -22,7 +22,7 @@
         </div>
         <div v-if="!lists.length" class="list-bg">
         </div>
-        <div v-if="category === 1" class="new" @click="makeNotice">
+        <div v-if="category === 1 && IsCenter == 1" class="new" @click="makeNotice">
           <div class="new-notice">
             创建公告
           </div>
@@ -39,7 +39,7 @@
         </div>
         <div v-if="!documents.length" class="list-bg list-bg-document">
         </div>
-        <div v-if="category === 1" class="new" @click="uploaderFile">
+        <div v-if="category === 1 && IsCenter == 1" class="new" @click="uploaderFile">
           <div class="new-notice">
             上传文件
           </div>
@@ -60,12 +60,15 @@ export default {
       lists: [],
       documents: [],
       curHeight: '',
-      rightcurHeight: ''
+      rightcurHeight: '',
+      IsCenter: ''
     }
   },
   mounted() {
-    this.category = JSON.parse(sessionStorage.getItem('userInfo')).Category
+    var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.category = userInfos.Category
     console.log(this.category, typeof (this.category))
+    this.IsCenter = userInfos.IsCenter
     this.initMenu()
     this.getNoticeList()
     this.getFileList()
@@ -166,14 +169,13 @@ export default {
 </script>
 <style lang="stylus" scoped>
   .container
-    background: #eee
-    padding: 10px
-    overflow: hidden
+    overflow: hidden;
+    background: #eee;
     h4
       font-size: 18px
     .board
-      background-color: #fff
-      padding: 15px 25px
+      background: #fff;
+      padding: 15px;
       position: relative
       h4
         color: #1b9bfc
