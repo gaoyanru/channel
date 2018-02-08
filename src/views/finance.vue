@@ -61,7 +61,7 @@
     </el-table-column>
     <el-table-column prop="BillTime" label="操作时间" width="200">
     </el-table-column>
-    <el-table-column label="操作">
+    <el-table-column label="操作" width="120">
       <template slot-scope="scope">
           <el-button @click="financeView(scope.row)" type="text" size="small" v-if="scope.row.OrderId && scope.row.Category != 3 && scope.row.Category != 6">查看订单</el-button>
         </template>
@@ -84,7 +84,7 @@
     </el-table-column>
     <el-table-column prop="Balance" label="余额" width="120">
     </el-table-column>
-    <el-table-column label="操作">
+    <el-table-column label="操作" width="120">
       <template slot-scope="scope">
         <el-button  v-if="scope.row.Category == 1 && scope.row.Status && scope.row.OrderCategory != 2" @click="financeView(scope.row)" type="text" size="small">查看订单</el-button>
         <el-button  v-if="scope.row.Category == 1 && scope.row.Status && scope.row.OrderCategory == 2" @click="financeView(scope.row)" type="text" size="small">查看订单</el-button>

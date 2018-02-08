@@ -60,8 +60,8 @@ export default {
     return {
       Status: [
         {status: '', statusName: '全部'},
-        {status: 0, statusName: '解约'},
-        {status: 1, statusName: '正常'}
+        {status: 1, statusName: '正常'},
+        {status: 0, statusName: '解约'}
       ],
       params: {
         year: 2018,
