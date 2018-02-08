@@ -5,13 +5,19 @@
       <el-input v-model="agent.ChannelName" auto-complete="off" ></el-input>
     </el-form-item>
     <el-form-item label="省份" required prop="ProvinceCode">
-      <el-select class="option-width" v-model="agent.ProvinceCode" placeholder="请选择" @change="filterCities()" >
+      <!-- <el-select class="option-width" v-model="agent.ProvinceCode" placeholder="请选择" @change="filterCities()" >
         <el-option v-for="item in provinces" :key="item.Code" :label="item.Name" :value="item.Code">
         </el-option>
+      </el-select> -->
+      <el-select v-model="agent.ProvinceCode" class="dialog-selectW" @change="curCities">
+        <el-option v-for="item in provinces" :key="item.Code" :label="item.Name" :value="item.Code"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="城市" required prop="CityCode">
-      <el-select class="option-width" v-model="agent.CityCode" placeholder="请选择城市" >
+      <!-- <el-select class="option-width" v-model="agent.CityCode" placeholder="请选择城市" >
+        <el-option v-for="item in cities" :key="item.Code" :label="item.Name" :value="item.Code"></el-option>
+      </el-select> -->
+      <el-select v-model="agent.CityCode" class="dialog-selectW">
         <el-option v-for="item in cities" :key="item.Code" :label="item.Name" :value="item.Code"></el-option>
       </el-select>
     </el-form-item>
@@ -94,14 +100,14 @@ import {
   getProvince,
   getCities,
   saveAgent,
-  getAgent
+  getAgent,
+  getcurCities
 } from '@/api/api'
 
 export default {
   name: 'AgentDialog',
   props: ['channelId', 'signKey', 'title'],
   data() {
-    const userInfo = sessionStorage.userInfo && JSON.parse(sessionStorage.userInfo)
     return {
       agent: {
         ChannelPartitionId: '',
@@ -168,8 +174,9 @@ export default {
           trigger: 'blur'
         }]
       },
+      ProvinceCode: '',
       isShow: true,
-      isCenter: userInfo.IsCenter,
+      isCenter: '',
       allCities: [],
       cities: [],
       partitions: [],
@@ -185,6 +192,8 @@ export default {
     }
   },
   created() {
+    var userInfos = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.IsCenter = userInfos.IsCenter
     this.getPartitions()
     this.getParamsProvince()
     this.getParamsCities()
@@ -197,6 +206,23 @@ export default {
     }
   },
   methods: {
+    getParamsProvince() {
+      getProvince().then((res) => {
+        this.provinces = res.data
+        // if (!this.row) {
+        //   this.agent.ProvinceCode = res.data[0].Code
+        //   this.curCities(this.ruleForm.ProvinceCode)
+        // }
+      })
+    },
+    curCities(val) {
+      getcurCities(val).then((res) => {
+        this.cities = res.data
+        if (this.ProvinceCode !== this.agent.ProvinceCode) {
+          this.agent.CityCode = res.data[0].Code
+        }
+      })
+    },
     getPartitions() {
       getPartitions().then((res) => {
         this.partitions = res.data
@@ -205,18 +231,18 @@ export default {
         }
       })
     },
-    getParamsProvince() {
-      const param = {
-        ChannelPartitionIds: ''
-      }
-      getProvince(param).then((res) => {
-        this.provinces = res.data
-      })
-    },
+    // getParamsProvince() {
+    //   const param = {
+    //     ChannelPartitionIds: ''
+    //   }
+    //   getProvince(param).then((res) => {
+    //     this.provinces = res.data
+    //   })
+    // },
     getParamsCities() {
       getCities().then((res) => {
         this.allCities = res.data
-        this.filterCities()
+        // this.filterCities()
       })
     },
     filterCities() {
@@ -300,6 +326,7 @@ export default {
             resAgent.ChannelPartitionId = ''
           }
           this.agent = resAgent
+          this.ProvinceCode = this.agent.ProvinceCode
           if (this.agent.ChannelPartitionId === 0) {
             this.agent.ChannelPartitionId = ''
           } else {
