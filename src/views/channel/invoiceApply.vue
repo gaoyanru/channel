@@ -5,8 +5,8 @@
       <div>
         <strong>未开发票金额：</strong>
         <span>{{'￥' + balance}}<span style="color: black">元</span></span>
-        <!-- <el-button type="primary" @click="apply()" :disabled="invalid">发票申请</el-button> -->
-        <el-button type="primary" @click="apply()">发票申请</el-button>
+        <el-button type="primary" @click="apply()" :disabled="invalid">发票申请</el-button>
+        <!-- <el-button type="primary" @click="apply()">发票申请</el-button> -->
       </div>
       <ul>
         <div>【温馨提示】</div>
