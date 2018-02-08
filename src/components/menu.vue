@@ -47,6 +47,7 @@ export default {
       '做账数据管理': 'fa fa-bar-chart',
       '业绩数据管理': 'fa fa-bar-chart',
       '外勤数据管理': 'fa fa-bar-chart',
+      '数据管理': 'fa fa-bar-chart',
       '续费数据管理': 'fa fa-bar-chart',
       '流转数据管理': 'fa fa-bar-chart',
       '渠道返点': 'fa fa-reply-all',
