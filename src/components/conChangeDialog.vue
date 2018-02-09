@@ -401,7 +401,7 @@
           // if (data.RegisterDate) { this.postData.Customer.RegisterDate = data.RegisterDate }
           if (data.RegisteredCapital) { this.postData.Customer.RegisteredCapital = data.RegisteredCapital }
           if (data.BusinessScope) { this.postData.Customer.BusinessScope = data.BusinessScope }
-          this.postData.ServiceCompanyCode = data.ServiceCompanyCode
+          this.ServiceCompanyCode = data.ServiceCompanyCode
           // this.postData.Customer = $.extend(true, {}, this.postData.Customer, data)
           setTimeout(() => {
             this.companySelected = false
@@ -554,6 +554,7 @@
               delete postData.GiftPrice
               postData.IsPromotion = 0
               delete postData.payType
+              postData.ServiceCompanyCode = postData.ServiceCompanyCode ? postData.ServiceCompanyCode : this.ServiceCompanyCode
               if (this.orderListmodify) { // 修改我的订单进来修改
                 putOrders(this.postData.OrderId, postData).then(res => {
                   if (res.status) {

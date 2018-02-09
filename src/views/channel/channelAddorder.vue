@@ -535,6 +535,7 @@ export default {
       nameReadonly: false,
       promotionShow: false,
       view: 0,
+      ServiceCompanyCode: '',
       isChangeCompanyName: false,
       isFirstcategory3: '' // 记账准备时候修改时才提示一致不一致公司
     }
@@ -1000,7 +1001,7 @@ export default {
               this.isBusinessScopeReadonly = true
             }
           }
-          this.postData.ServiceCompanyCode = data.ServiceCompanyCode
+          this.ServiceCompanyCode = data.ServiceCompanyCode
           // if (data.RegisterDate) { this.isCompanyReadonly = true } else { this.isCompanyReadonly = false }
           // if (data.RegisteredCapital) { this.isRegisteredCapitalReadonly = true } else { this.isRegisteredCapitalReadonly = false }
           // if (data.BusinessScope) { this.isBusinessScopeReadonly = true } else { this.isBusinessScopeReadonly = false }
@@ -1623,6 +1624,7 @@ export default {
           delete postData.GiftPrice
         }
         delete this.postData.payType
+        postData.ServiceCompanyCode = postData.ServiceCompanyCode ? postData.ServiceCompanyCode : this.ServiceCompanyCode
         putOrders(this.postData.OrderId, postData).then(res => {
           if (res.status) {
             this.$message({
@@ -1807,6 +1809,7 @@ export default {
       var IsZero = postData.payType.IsZero
       postData.PayType = postData.payType.Id
       delete postData.payType
+      postData.ServiceCompanyCode = postData.ServiceCompanyCode ? postData.ServiceCompanyCode : this.ServiceCompanyCode
       console.log(postData, '最终提交数据')
       console.log(this.category, 'this.category')
       if (this.category === 2) {
