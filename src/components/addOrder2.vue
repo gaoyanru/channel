@@ -412,7 +412,7 @@
           // if (data.RegisterDate) { this.postData.Customer.RegisterDate = data.RegisterDate }
           if (data.RegisteredCapital) { this.postData.Customer.RegisteredCapital = data.RegisteredCapital }
           if (data.BusinessScope) { this.postData.Customer.BusinessScope = data.BusinessScope }
-          this.postData.ServiceCompanyCode = data.ServiceCompanyCode
+          this.ServiceCompanyCode = data.ServiceCompanyCode
           setTimeout(() => {
             this.companySelected = false
           }, 0)
